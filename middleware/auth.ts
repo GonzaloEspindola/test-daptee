@@ -11,4 +11,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (user && !to.path.startsWith('/dashboard')) {
     return navigateTo('/dashboard/users')
   }
+
+  if (!user && to.path !== '/auth') {
+    return navigateTo('/auth')
+  }
 })
