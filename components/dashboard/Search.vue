@@ -1,41 +1,62 @@
 <script setup lang="ts">
 import { useProductsStore } from '~/store/products'
+import { useSearchStore } from '~/store/search'
 import { useUserStore } from '~/store/users'
 
 const route = useRoute()
-const userStore = useUserStore()
-const productStore = useProductsStore()
+const { setQuery, updateModule } = useSearchStore()
+const { module } = storeToRefs(useSearchStore())
+const { length: usersLength } = storeToRefs(useUserStore())
+const { length: productsLength } = storeToRefs(useProductsStore())
 const search = ref('')
-const { getFilteredUsersLength } = storeToRefs(userStore)
-const { getFilteredProductsLength } = storeToRefs(productStore)
 
-const path = computed(() => route.path.split('/')[2])
-const isUserModule = computed(() => path.value === 'users')
+const handleSearch = () => {
+  setQuery(search.value)
+}
 
-watch(search, (query) => {
-  if (isUserModule.value) {
-    userStore.filterUsers(query)
-  } else {
-    productStore.filterProducts(query)
-  }
-})
+watch(
+  route,
+  () => {
+    updateModule(route.path.split('/')[2])
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
   <div class="d-flex flex-col align-center ga-4">
     <v-text-field
       v-model="search"
-      clearable
-      :label="path === 'users' ? 'Buscar usuario' : 'Buscar producto'"
+      :label="module === 'users' ? 'Buscar usuario...' : 'Buscar producto...'"
       hide-details="auto"
       variant="outlined"
       width="400"
+      @update:modelValue="handleSearch"
     />
-    <p class="text-hh7">
-      <span class="text-primary">{{
-        isUserModule ? getFilteredUsersLength : getFilteredProductsLength
-      }}</span>
-      {{ isUserModule ? 'usuarios' : 'productos' }} encontrados
-    </p>
+
+    <div class="d-flex flex-col align-center ga-2">
+      <span class="text-primary text-h7">
+        <div v-if="module === 'users'">
+          <v-progress-circular
+            v-if="usersLength === null"
+            indeterminate
+            color="primary"
+            size="18"
+          />
+          <span v-else>{{ usersLength }}</span>
+        </div>
+
+        <div v-if="module === 'products'">
+          <v-progress-circular
+            v-if="productsLength === null"
+            indeterminate
+            color="primary"
+            size="18"
+          />
+          <span v-else>{{ productsLength }}</span>
+        </div>
+      </span>
+      {{ module === 'users' ? 'usuarios' : 'productos' }} encontrados
+    </div>
   </div>
 </template>

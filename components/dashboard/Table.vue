@@ -24,6 +24,24 @@ const handleView = (id: string) => {
 const handleDelete = (id: string) => {
   emit('delete', id)
 }
+
+watch(
+  () => [loading, data],
+  () => {
+    const tables = document.querySelectorAll('table')
+
+    if (loading || data?.length === 0) {
+      tables.forEach((table) => {
+        table.style.height = '100%'
+      })
+    } else {
+      tables.forEach((table) => {
+        table.style.height = 'auto'
+      })
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -48,11 +66,12 @@ const handleDelete = (id: string) => {
       </tr>
 
       <tr
-        v-else
+        v-else-if="data?.length"
         v-for="item in data"
         :key="item.id"
         class="text-center"
         :class="{ 'bg-grey-lighten-4': hoveredRow === item.id }"
+        style="height: 20px; max-height: 20px"
         @mouseover="hoveredRow = item.id"
         @mouseleave="hoveredRow = null"
       >
@@ -107,6 +126,23 @@ const handleDelete = (id: string) => {
           </slot>
         </td>
       </tr>
+
+      <tr v-else>
+        <td :colspan="headers.length">
+          <section class="d-flex flex-column align-center justify-center ga-5">
+            <v-img src="/assets/empty.png" alt="Empty" width="200" />
+            <p class="text-h5 text-grey-darken-3">
+              No se encontraron resultados para tu busqueda
+            </p>
+          </section>
+        </td>
+      </tr>
     </tbody>
   </v-table>
 </template>
+
+<style scoped>
+table {
+  height: 100%;
+}
+</style>

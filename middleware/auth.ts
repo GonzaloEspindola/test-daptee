@@ -1,4 +1,3 @@
-// middleware/auth.middleware.ts
 import { useAuthStore } from '@/store/auth'
 
 export default defineNuxtRouteMiddleware((to, from) => {

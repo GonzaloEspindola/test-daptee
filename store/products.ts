@@ -2,66 +2,63 @@ import type { Product } from '~/types/products'
 
 interface ProductState {
   products: Product[] | null
-  filteredProducts: Product[] | null
   loading: boolean
   error: string | null
+  length: number | null
 }
 
 export const useProductsStore = defineStore('products', {
   state: (): ProductState => ({
-    products: [] as Product[],
-    filteredProducts: [] as Product[],
+    products: null,
     loading: false,
     error: null,
+    length: null,
   }),
 
   actions: {
     async fetchProducts() {
       this.loading = true
       this.error = null
+
       try {
-        const { data } = await useAsyncData(
-          'products',
-          (): Promise<Product[]> =>
-            $fetch('https://679ac372747b09cdcccfa74c.mockapi.io/products'),
+        const data: Product[] = await $fetch(
+          'https://679ac372747b09cdcccfa74c.mockapi.io/products',
         )
 
-        this.setProducts(data.value ?? [])
+        this.products = data ?? []
+        this.length = this.products.length
       } catch (e) {
-        this.error = 'Failed to load products'
+        this.error = 'Failed to load users'
       } finally {
         this.loading = false
-      }
-    },
-
-    setProducts(products: Product[]) {
-      this.products = products
-      this.filteredProducts = products
-    },
-
-    filterProducts(query: string) {
-      if (query && this.products) {
-        this.filteredProducts = this.products.filter((product) =>
-          Object.values(product).some((value) =>
-            String(value).toLowerCase().includes(query.toLowerCase()),
-          ),
-        )
-      } else {
-        this.filteredProducts = this.products
       }
     },
 
     deleteProduct(id: string) {
       if (id && this.products) {
         this.products = this.products.filter((product) => product.id !== id)
-        this.filterProducts('')
       }
+    },
+
+    getFilteredProducts(query: string): Product[] {
+      if (!query) return this.products as Product[]
+
+      const filteredProducts =
+        this.products?.filter((user) =>
+          Object.values(user).some((value) =>
+            String(value).toLowerCase().includes(query),
+          ),
+        ) ?? []
+
+      this.length = filteredProducts.length
+
+      return filteredProducts
     },
   },
 
   getters: {
-    getFilteredProductsLength(state: ProductState) {
-      return state.filteredProducts?.length ?? 0
+    getFilteredProductsLength: (state: ProductState) => {
+      return state.length
     },
   },
 })

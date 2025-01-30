@@ -2,17 +2,17 @@ import type { User } from '~/types/users'
 
 interface UserState {
   users: User[] | null
-  filteredUsers: User[] | null
   loading: boolean
   error: string | null
+  length: number | null
 }
 
 export const useUserStore = defineStore('users', {
   state: (): UserState => ({
-    users: [] as User[] | null,
-    filteredUsers: [] as User[] | null,
+    users: null,
     loading: false,
     error: null,
+    length: null,
   }),
 
   actions: {
@@ -20,13 +20,12 @@ export const useUserStore = defineStore('users', {
       this.loading = true
       this.error = null
       try {
-        const { data } = await useAsyncData(
-          'users',
-          (): Promise<User[]> =>
-            $fetch('https://679ac372747b09cdcccfa74c.mockapi.io/users'),
+        const data: User[] = await $fetch(
+          'https://679ac372747b09cdcccfa74c.mockapi.io/users',
         )
 
-        this.setUsers(data.value ?? [])
+        this.users = data ?? []
+        this.length = this.users.length
       } catch (e) {
         this.error = 'Failed to load users'
       } finally {
@@ -34,34 +33,31 @@ export const useUserStore = defineStore('users', {
       }
     },
 
-    setUsers(users: User[]) {
-      this.users = users
-      this.filteredUsers = users
-    },
-
-    filterUsers(query: string) {
-      if (query && this.users) {
-        this.filteredUsers = this.users.filter((user) =>
-          Object.values(user).some((value) =>
-            String(value).toLowerCase().includes(query.toLowerCase()),
-          ),
-        )
-      } else {
-        this.filteredUsers = this.users
-      }
-    },
-
     deleteUser(id: string) {
       if (id && this.users) {
         this.users = this.users.filter((user) => user.id !== id)
-        this.filterUsers('')
       }
+    },
+
+    getFilteredUsers(query: string): User[] {
+      if (!query) return this.users as User[]
+
+      const filteredUsers =
+        this.users?.filter((user) =>
+          Object.values(user).some((value) =>
+            String(value).toLowerCase().includes(query),
+          ),
+        ) ?? []
+
+      this.length = filteredUsers.length
+
+      return filteredUsers
     },
   },
 
   getters: {
-    getFilteredUsersLength(state: UserState) {
-      return state.filteredUsers?.length ?? 0
+    getFilteredUsersLength: (state: UserState) => {
+      return state.length
     },
   },
 })

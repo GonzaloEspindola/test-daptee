@@ -5,20 +5,22 @@ definePageMeta({
 })
 
 import { toast } from 'vue3-toastify'
-import { DashboardTable } from '#components'
 import { useDateFormat } from '~/composable/useDateFormat'
+import { useSearchStore } from '~/store/search'
 import { useUserStore } from '~/store/users'
 import type { User } from '~/types/users'
 
-const { fetchUsers, deleteUser } = useUserStore()
-const { filteredUsers, loading, error } = storeToRefs(useUserStore())
+const { fetchUsers, deleteUser, getFilteredUsers } = useUserStore()
+const { loading, error, users } = storeToRefs(useUserStore())
+const { query } = storeToRefs(useSearchStore())
 const { formatDate } = useDateFormat()
+const data = computed(() => getFilteredUsers(query.value))
 
 const isModalVisible = ref(false)
 const selectedUser = ref<User>({} as User)
 
 const handleViewUser = (id: string) => {
-  selectedUser.value = filteredUsers.value?.find((user) => user.id === id)!
+  selectedUser.value = data.value.find((user: User) => user.id === id) as User
   isModalVisible.value = true
 }
 
@@ -50,21 +52,29 @@ const headers = [
   { key: 'actions', title: 'Acciones' },
 ]
 
-if (filteredUsers.value?.length === 0) {
+if (!users.value) {
   fetchUsers()
 }
+
+watch(
+  query,
+  () => {
+    getFilteredUsers(query.value)
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
   <DashboardTable
     :loading="loading"
-    :data="filteredUsers"
+    :data="data"
     :headers="headers"
     @delete="(id: string) => handleDeleteUser(id)"
     @view="(id: string) => handleViewUser(id)"
   >
     <template
-      v-for="user in filteredUsers"
+      v-for="user in data"
       :key="user.id"
       v-slot:[`cell-id-${user.id}`]="{ item }"
     >
@@ -72,7 +82,7 @@ if (filteredUsers.value?.length === 0) {
     </template>
 
     <template
-      v-for="user in filteredUsers"
+      v-for="user in data"
       :key="user.id"
       v-slot:[`cell-avatar-${user.id}`]="{ item }"
     >
@@ -82,7 +92,7 @@ if (filteredUsers.value?.length === 0) {
     </template>
 
     <template
-      v-for="user in filteredUsers"
+      v-for="user in data"
       :key="user.id"
       v-slot:[`cell-createdAt-${user.id}`]="{ item }"
     >

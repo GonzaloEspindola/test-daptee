@@ -3,6 +3,7 @@ import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import { useDateFormat } from '~/composable/useDateFormat'
 import { useProductsStore } from '~/store/products'
+import { useSearchStore } from '~/store/search'
 import type { Product } from '~/types/products'
 
 definePageMeta({
@@ -10,17 +11,19 @@ definePageMeta({
   layout: 'dashboard',
 })
 
-const { fetchProducts, deleteProduct } = useProductsStore()
-const { filteredProducts, loading, error } = storeToRefs(useProductsStore())
+const { fetchProducts, deleteProduct, getFilteredProducts } = useProductsStore()
+const { loading, error, products } = storeToRefs(useProductsStore())
+const { query } = storeToRefs(useSearchStore())
 const { formatDate } = useDateFormat()
+const data = computed(() => getFilteredProducts(query.value))
 
 const isModalVisible = ref(false)
 const selectedProduct = ref<Product>({} as Product)
 
 const handleViewProduct = (id: string) => {
-  selectedProduct.value = filteredProducts.value?.find(
-    (product) => product.id === id,
-  )!
+  selectedProduct.value = data.value.find(
+    (user: Product) => user.id === id,
+  ) as Product
   isModalVisible.value = true
 }
 
@@ -52,21 +55,29 @@ const headers = [
   { key: 'actions', title: 'Acciones' },
 ]
 
-if (filteredProducts.value?.length === 0) {
+if (!products.value) {
   fetchProducts()
 }
+
+watch(
+  query,
+  () => {
+    getFilteredProducts(query.value)
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
   <DashboardTable
     :loading="loading"
-    :data="filteredProducts"
+    :data="data"
     :headers="headers"
     @delete="(id: string) => handleDeleteUser(id)"
     @view="(id: string) => handleViewProduct(id)"
   >
     <template
-      v-for="user in filteredProducts"
+      v-for="user in data"
       :key="user.id"
       v-slot:[`cell-id-${user.id}`]="{ item }"
     >
@@ -74,7 +85,7 @@ if (filteredProducts.value?.length === 0) {
     </template>
 
     <template
-      v-for="product in filteredProducts"
+      v-for="product in data"
       :key="product.id"
       v-slot:[`cell-description-${product.id}`]="{ item }"
     >
@@ -82,7 +93,7 @@ if (filteredProducts.value?.length === 0) {
     </template>
 
     <template
-      v-for="product in filteredProducts"
+      v-for="product in data"
       :key="product.id"
       v-slot:[`cell-price-${product.id}`]="{ item }"
     >
@@ -90,7 +101,7 @@ if (filteredProducts.value?.length === 0) {
     </template>
 
     <template
-      v-for="product in filteredProducts"
+      v-for="product in data"
       :key="product.id"
       v-slot:[`cell-createdAt-${product.id}`]="{ item }"
     >
