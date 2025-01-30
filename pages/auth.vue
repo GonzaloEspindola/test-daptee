@@ -6,16 +6,12 @@ definePageMeta({
 })
 
 const { login } = useAuthStore()
-const username = ref<string>('')
-const password = ref<string>('')
-const error = ref<string>('')
+const { error } = storeToRefs(useAuthStore())
+const username: Ref<string> = ref<string>('')
+const password: Ref<string> = ref<string>('')
 
 const handleLogin: Function = (): void => {
-  if (username.value === 'Daptee' && password.value === 'Daptee2025') {
-    login(username.value)
-  } else {
-    error.value = 'Usuario y/o contraseña incorrectos'
-  }
+  login(username.value, password.value)
 }
 </script>
 
@@ -67,11 +63,7 @@ const handleLogin: Function = (): void => {
       </v-col>
 
       <v-col cols="12" md="6" class="d-flex align-center justify-center pa-0">
-        <v-img
-          src="/assets/img/login_background.jpg"
-          height="100vh"
-          cover
-        ></v-img>
+        <v-img src="/assets/login_background.jpg" height="100vh" cover></v-img>
       </v-col>
     </v-row>
   </v-container>
