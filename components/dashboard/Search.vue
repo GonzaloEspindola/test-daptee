@@ -22,14 +22,14 @@ watch(search, (query) => {
 </script>
 
 <template>
-  <div class="d-flex flex-col align-center ga-4 w-100">
+  <div class="d-flex flex-col align-center ga-4">
     <v-text-field
       v-model="search"
       clearable
       :label="path === 'users' ? 'Buscar usuario' : 'Buscar producto'"
       hide-details="auto"
       variant="outlined"
-      class="w-100"
+      width="400"
     />
     <p class="text-h6">
       <span class="text-primary">{{

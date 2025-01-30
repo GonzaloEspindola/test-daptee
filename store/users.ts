@@ -1,5 +1,3 @@
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
 import type { User } from '~/types/users'
 
 interface UserState {

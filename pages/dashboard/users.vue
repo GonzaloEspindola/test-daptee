@@ -56,47 +56,45 @@ if (filteredUsers.value?.length === 0) {
 </script>
 
 <template>
-  <section class="h-100 w-100 d-flex justify-center align-center">
-    <DashboardTable
-      :loading="loading"
-      :data="filteredUsers"
-      :headers="headers"
-      @delete="(id: string) => handleDeleteUser(id)"
-      @view="(id: string) => handleViewUser(id)"
+  <DashboardTable
+    :loading="loading"
+    :data="filteredUsers"
+    :headers="headers"
+    @delete="(id: string) => handleDeleteUser(id)"
+    @view="(id: string) => handleViewUser(id)"
+  >
+    <template
+      v-for="user in filteredUsers"
+      :key="user.id"
+      v-slot:[`cell-id-${user.id}`]="{ item }"
     >
-      <template
-        v-for="user in filteredUsers"
-        :key="user.id"
-        v-slot:[`cell-id-${user.id}`]="{ item }"
-      >
-        <span class="font-weight-bold">{{ item.id }}</span>
-      </template>
+      <span class="font-weight-bold">{{ item.id }}</span>
+    </template>
 
-      <template
-        v-for="user in filteredUsers"
-        :key="user.id"
-        v-slot:[`cell-avatar-${user.id}`]="{ item }"
-      >
-        <v-avatar class="ml-2" color="primary" :image="item.avatar">{{
-          item.name.charAt(0)
-        }}</v-avatar>
-      </template>
+    <template
+      v-for="user in filteredUsers"
+      :key="user.id"
+      v-slot:[`cell-avatar-${user.id}`]="{ item }"
+    >
+      <v-avatar class="ml-2" color="primary" :image="item.avatar">{{
+        item.name.charAt(0)
+      }}</v-avatar>
+    </template>
 
-      <template
-        v-for="user in filteredUsers"
-        :key="user.id"
-        v-slot:[`cell-createdAt-${user.id}`]="{ item }"
-      >
-        <span>{{ formatDate(item.createdAt) }}</span>
-      </template>
-    </DashboardTable>
+    <template
+      v-for="user in filteredUsers"
+      :key="user.id"
+      v-slot:[`cell-createdAt-${user.id}`]="{ item }"
+    >
+      <span>{{ formatDate(item.createdAt) }}</span>
+    </template>
+  </DashboardTable>
 
-    <DashboardUserModal
-      :user="selectedUser"
-      :visible="isModalVisible"
-      @update:visible="isModalVisible = $event"
-    />
+  <DashboardUserModal
+    :user="selectedUser"
+    :visible="isModalVisible"
+    @update:visible="isModalVisible = $event"
+  />
 
-    <v-alert v-if="error" type="error" class="mb-4">{{ error }}</v-alert>
-  </section>
+  <v-alert v-if="error" type="error" class="mb-4">{{ error }}</v-alert>
 </template>
