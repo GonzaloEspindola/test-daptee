@@ -10,12 +10,12 @@
       </div>
 
       <div class="d-flex flex-column ga-2" :style="{ height: '90%' }">
-        <v-list-item link to="/dashboard/users">
+        <v-list-item link to="/dashboard/users" class="rounded-lg">
           <v-list-item-content>
             <v-list-item-title>Usuarios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/dashboard/products">
+        <v-list-item link to="/dashboard/products" class="rounded-lg">
           <v-list-item-content>
             <v-list-item-title>Productos</v-list-item-title>
           </v-list-item-content>

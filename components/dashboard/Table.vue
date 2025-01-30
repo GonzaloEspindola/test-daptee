@@ -27,13 +27,13 @@ const handleDelete = (id: string) => {
 </script>
 
 <template>
-  <v-table class="h-100 w-100" fixed-header>
+  <v-table class="h-100 w-100 bg-grey-lighten-3">
     <thead>
       <tr>
         <th
           v-for="header in headers"
           :key="header.key"
-          class="text-center text-grey-darken-3 font-weight-bold"
+          class="text-center font-weight-bold bg-grey-darken-4 text-white"
         >
           {{ header.title }}
         </th>
@@ -52,7 +52,7 @@ const handleDelete = (id: string) => {
         v-for="item in data"
         :key="item.id"
         class="text-center"
-        :class="{ 'bg-grey-lighten-3': hoveredRow === item.id }"
+        :class="{ 'bg-grey-lighten-4': hoveredRow === item.id }"
         @mouseover="hoveredRow = item.id"
         @mouseleave="hoveredRow = null"
       >
@@ -76,8 +76,7 @@ const handleDelete = (id: string) => {
                   <v-list-item class="pa-0">
                     <v-list-item-title>
                       <v-btn
-                        class="w-100 rounded-0 d-flex align-center justify-space-between"
-                        color="primary"
+                        class="w-100 rounded-0 d-flex align-center justify-space-between bg-grey-darken-4"
                         @click="handleView(item.id)"
                       >
                         <v-icon

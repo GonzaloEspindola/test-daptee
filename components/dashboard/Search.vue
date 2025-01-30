@@ -31,7 +31,7 @@ watch(search, (query) => {
       variant="outlined"
       width="400"
     />
-    <p class="text-h6">
+    <p class="text-hh7">
       <span class="text-primary">{{
         isUserModule ? getFilteredUsersLength : getFilteredProductsLength
       }}</span>
