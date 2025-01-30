@@ -4,7 +4,7 @@
       <div :style="{ height: '10%' }">
         <v-list-item class="border-b-sm h-100">
           <NuxtLink to="/">
-            <v-img src="/assets/Logo Daptee Nuevo.svg" height="50" />
+            <v-img src="/assets/logo_daptee.svg" height="50" />
           </NuxtLink>
         </v-list-item>
       </div>

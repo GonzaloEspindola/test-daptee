@@ -10,6 +10,8 @@ const { error } = storeToRefs(useAuthStore())
 const username: Ref<string> = ref<string>('')
 const password: Ref<string> = ref<string>('')
 
+const visible: Ref<boolean> = ref<boolean>(false)
+
 const handleLogin: Function = (): void => {
   login(username.value, password.value)
 }
@@ -21,42 +23,62 @@ const handleLogin: Function = (): void => {
       <v-col
         cols="12"
         md="6"
-        class="d-flex flex-column justify-center align-center pa-0"
+        class="d-flex flex-column justify-center align-center pa-0 bg-grey-darken-4"
       >
-        <div class="pa-16 w-75">
-          <v-card-title class="text-center text-h5"
-            >Iniciar Sesión</v-card-title
+        <div
+          class="pa-4 w-75 d-flex flex-column justify-center align-center ga-6"
+        >
+          <v-img :width="300" src="/assets/logo_daptee.svg"></v-img>
+
+          <v-card-title class="text-center text-h5 text-primary"
+            >Inicia sesión en tu cuenta</v-card-title
           >
-          <v-card-subtitle class="text-center"
-            >Inicia sesión con las credenciales de administrador Daptee -
-            Daptee2025</v-card-subtitle
+
+          <section
+            class="d-flex flex-column justify-center align-center w-75 ga-4"
           >
-          <v-card-text class="h-auto">
             <v-text-field
               v-model="username"
               label="Usuario"
-              dense
               variant="outlined"
+              placeholder="Ingresa tu usuario"
+              hide-details="auto"
+              width="100%"
             ></v-text-field>
+
             <v-text-field
               v-model="password"
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="visible ? 'text' : 'password'"
               label="Contraseña"
-              type="password"
+              placeholder="Ingresa tu contraseña"
               variant="outlined"
-              dense
+              width="100%"
+              hide-details="auto"
+              @click:append-inner="visible = !visible"
             ></v-text-field>
-            <v-alert v-if="error" type="error" class="mb-4">{{
+          </section>
+
+          <div class="w-75 d-flex flex-column ga-2 align-center">
+            <v-alert v-if="error" class="ma-0 w-100" type="error">{{
               error
             }}</v-alert>
-          </v-card-text>
-          <div class="pa-4">
+          </div>
+
+          <div class="d-flex flex-column ga-2 w-75">
             <v-btn
-              color="black"
-              variant="outlined"
-              class="w-100"
-              size="large"
+              color="primary"
+              variant="tonal"
+              block
+              class="py-4 h-auto w-full"
               @click="handleLogin"
               >Ingresar</v-btn
+            >
+            <a
+              class="text-caption text-decoration-none text-blue text-center text-secondary"
+              href="#"
+            >
+              ¿Olvidaste tu contraseña?</a
             >
           </div>
         </div>
