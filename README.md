@@ -1,75 +1,24 @@
-# Nuxt Minimal Starter
+# Test de Daptee ✨
+Prueba tecnica desarrollada principalmente con Nuxt 3, TypeScript, Pinia y Vuetify.
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+# Instalación
 
-## Setup
+1. **Clona el repositorio con HTTPS o SSH**:
+   ```sh
+   git clone https://github.com/GonzaloEspindola/test-daptee.git
 
-Make sure to install dependencies:
+2. **Dirigete al proyecto**:
+   ```sh
+   cd test-daptee
 
-```bash
-# npm
-npm install
+3. **Instala las dependencias**:
+   ```sh
+   npm install
 
-# pnpm
-pnpm install
+4. **Inicia el servidor de desarrollo**:
+   ```sh
+   npm run dev
 
-# yarn
-yarn install
+# Web
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Probar la web en el despliegue [Enlace a la demo](https://test-daptee.vercel.app/auth)
