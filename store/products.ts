@@ -36,7 +36,9 @@ export const useProductsStore = defineStore('products', {
 
     deleteProduct(id: string) {
       if (id && this.products) {
-        this.products = this.products.filter((product) => product.id !== id)
+        const products = this.products.filter((product) => product.id !== id)
+        this.products = products
+        this.length = products.length
       }
     },
 

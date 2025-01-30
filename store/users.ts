@@ -22,6 +22,10 @@ export const useUserStore = defineStore('users', {
       try {
         const data: User[] = await $fetch(
           'https://679ac372747b09cdcccfa74c.mockapi.io/users',
+          {
+            method: 'GET',
+            query: {},
+          },
         )
 
         this.users = data ?? []
@@ -35,7 +39,9 @@ export const useUserStore = defineStore('users', {
 
     deleteUser(id: string) {
       if (id && this.users) {
-        this.users = this.users.filter((user) => user.id !== id)
+        const user = this.users.filter((user) => user.id !== id)
+        this.users = user
+        this.length = user.length
       }
     },
 
