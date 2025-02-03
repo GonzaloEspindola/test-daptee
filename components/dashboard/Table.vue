@@ -7,23 +7,9 @@ interface Props {
   headers: { key: string; title: string }[]
 }
 
-interface Emits {
-  (e: 'view', id: string): void
-  (e: 'delete', id: string): void
-}
-
 const { loading, data, headers } = defineProps<Props>()
-const emit = defineEmits<Emits>()
 
 const hoveredRow = ref<string | null>(null)
-
-const handleView = (id: string) => {
-  emit('view', id)
-}
-
-const handleDelete = (id: string) => {
-  emit('delete', id)
-}
 
 watch(
   () => [loading, data],
@@ -71,59 +57,14 @@ watch(
         :key="item.id"
         class="text-center"
         :class="{ 'bg-grey-lighten-4': hoveredRow === item.id }"
-        style="height: 20px; max-height: 20px"
-        @mouseover="hoveredRow = item.id"
-        @mouseleave="hoveredRow = null"
       >
         <td v-for="header in headers" :key="header.key">
           <slot
-            :name="`cell-${header.key}-${item.id}`"
+            v-if="$slots[header.key]"
+            :name="header.key"
             :item="item"
-            :header="header"
-          >
-            <template v-if="header.key === 'actions'">
-              <v-menu>
-                <template v-slot:activator="{ props }">
-                  <v-btn
-                    icon="mdi-dots-vertical"
-                    variant="text"
-                    v-bind="props"
-                  ></v-btn>
-                </template>
-
-                <v-list class="pa-0">
-                  <v-list-item class="pa-0">
-                    <v-list-item-title>
-                      <v-btn
-                        class="w-100 rounded-0 d-flex align-center justify-space-between bg-grey-darken-4"
-                        @click="handleView(item.id)"
-                      >
-                        <v-icon
-                          icon="mdi-checkbox-marked-circle"
-                          class="mr-2"
-                        ></v-icon>
-                        Ver
-                      </v-btn>
-                    </v-list-item-title>
-
-                    <v-list-item-title>
-                      <v-btn
-                        class="w-100 rounded-0 d-flex align-center justify-space-between"
-                        color="red"
-                        @click="handleDelete(item.id)"
-                      >
-                        <v-icon icon="mdi-cancel" class="mr-2"></v-icon>
-                        Eliminar
-                      </v-btn>
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </template>
-            <template v-else>
-              {{ item[header.key] }}
-            </template>
-          </slot>
+          ></slot>
+          <span v-else>{{ item[header.key] }}</span>
         </td>
       </tr>
 
@@ -132,7 +73,7 @@ watch(
           <section class="d-flex flex-column align-center justify-center ga-5">
             <v-img src="/assets/empty.png" alt="Empty" width="200" />
             <p class="text-h5 text-grey-darken-3">
-              No se encontraron resultados para tu busqueda
+              No se encontraron resultados para tu búsqueda
             </p>
           </section>
         </td>

@@ -69,43 +69,29 @@ watch(
 </script>
 
 <template>
-  <DashboardTable
-    :loading="loading"
-    :data="data"
-    :headers="headers"
-    @delete="(id: string) => handleDeleteUser(id)"
-    @view="(id: string) => handleViewProduct(id)"
-  >
-    <template
-      v-for="user in data"
-      :key="user.id"
-      v-slot:[`cell-id-${user.id}`]="{ item }"
-    >
-      <span class="font-weight-bold">{{ item.id }}</span>
+  <DashboardTable :loading="loading" :data="data" :headers="headers">
+    <template #id="{ item }">
+      <p class="font-weight-bold">{{ item.id }}</p>
     </template>
 
-    <template
-      v-for="product in data"
-      :key="product.id"
-      v-slot:[`cell-description-${product.id}`]="{ item }"
-    >
-      <span class="text-grey-darken-1">{{ item.description }}</span>
+    <template #description="{ item }">
+      <p class="text-grey-darken-1">{{ item.description }}</p>
     </template>
 
-    <template
-      v-for="product in data"
-      :key="product.id"
-      v-slot:[`cell-price-${product.id}`]="{ item }"
-    >
+    <template #price="{ item }">
       <v-badge color="success" :content="item.price" inline></v-badge>
     </template>
 
-    <template
-      v-for="product in data"
-      :key="product.id"
-      v-slot:[`cell-createdAt-${product.id}`]="{ item }"
-    >
+    <template #createdAt="{ item }">
       <span>{{ formatDate(item.createdAt) }}</span>
+    </template>
+
+    <template #actions="{ item }">
+      <DashboardActions
+        :item-id="item.id"
+        @view="handleViewProduct"
+        @delete="handleDeleteUser"
+      />
     </template>
   </DashboardTable>
 

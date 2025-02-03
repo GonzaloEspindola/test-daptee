@@ -66,37 +66,27 @@ watch(
 </script>
 
 <template>
-  <DashboardTable
-    :loading="loading"
-    :data="data"
-    :headers="headers"
-    @delete="(id: string) => handleDeleteUser(id)"
-    @view="(id: string) => handleViewUser(id)"
-  >
-    <template
-      v-for="user in data"
-      :key="user.id"
-      v-slot:[`cell-id-${user.id}`]="{ item }"
-    >
-      <span class="font-weight-bold">{{ item.id }}</span>
+  <DashboardTable :loading="loading" :data="data" :headers="headers">
+    <template #id="{ item }">
+      <p class="font-weight-bold">{{ item.id }}</p>
     </template>
 
-    <template
-      v-for="user in data"
-      :key="user.id"
-      v-slot:[`cell-avatar-${user.id}`]="{ item }"
-    >
-      <v-avatar class="ml-2" color="primary" :image="item.avatar">{{
-        item.name.charAt(0)
-      }}</v-avatar>
+    <template #avatar="{ item }">
+      <v-avatar class="ml-2" color="primary" :image="item.avatar">
+        {{ item.name.charAt(0) }}
+      </v-avatar>
     </template>
 
-    <template
-      v-for="user in data"
-      :key="user.id"
-      v-slot:[`cell-createdAt-${user.id}`]="{ item }"
-    >
+    <template #createdAt="{ item }">
       <span>{{ formatDate(item.createdAt) }}</span>
+    </template>
+
+    <template #actions="{ item }">
+      <DashboardActions
+        :item-id="item.id"
+        @view="handleViewUser"
+        @delete="handleDeleteUser"
+      />
     </template>
   </DashboardTable>
 
