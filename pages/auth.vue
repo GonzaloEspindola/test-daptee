@@ -84,7 +84,7 @@ const handleLogin: Function = (): void => {
         </div>
       </v-col>
 
-      <v-col cols="12" md="6" class="d-flex align-center justify-center pa-0">
+      <v-col v-if="$vuetify.display.mdAndUp" cols="12" md="6" class="d-flex align-center justify-center pa-0">
         <v-img src="/assets/login_background.jpg" height="100vh" cover></v-img>
       </v-col>
     </v-row>

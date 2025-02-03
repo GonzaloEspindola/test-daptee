@@ -1,10 +1,10 @@
 <template>
-  <v-app>
+  <v-app >
     <v-container class="d-flex h-screen ma-0 pa-0">
       <v-row class="ma-0 pa-0">
         <SectionSidebar />
 
-        <v-col cols="12" md="10" class="pa-0 ma-0 bg-grey-lighten-3">
+        <v-col cols="12" md="10" class="pa-0 ma-0 bg-grey-lighten-3 flex-grow-1">
           <v-main>
             <v-container class="ma-0 pa-0 h-screen">
               <v-row class="ma-0 pa-4 border-red" :style="{ height: '10%' }">
@@ -32,6 +32,11 @@
 </template>
 
 <style scoped>
+
+.v-app {
+  min-height: 100vh;
+}
+
 .v-container {
   max-width: 100%;
 }
