@@ -51,7 +51,7 @@ export const useUserStore = defineStore('users', {
       const filteredUsers =
         this.users?.filter((user) =>
           Object.values(user).some((value) =>
-            String(value).toLowerCase().includes(query),
+            String(value).toLowerCase().includes(query.toLocaleLowerCase()),
           ),
         ) ?? []
 
